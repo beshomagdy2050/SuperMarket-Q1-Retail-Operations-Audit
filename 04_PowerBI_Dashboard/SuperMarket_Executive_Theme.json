@@ -1,0 +1,53 @@
+{
+  "name": "SuperMarket Executive Emerald & Gold Theme",
+  "dataColors": [
+    "#065F46",
+    "#0D9488",
+    "#D97706",
+    "#E11D48",
+    "#0284C7",
+    "#7C3AED",
+    "#064E3B",
+    "#B45309",
+    "#10B981",
+    "#F59E0B",
+    "#14B8A6",
+    "#F43F5E",
+    "#38BDF8",
+    "#A855F7",
+    "#047857",
+    "#92400E",
+    "#34D399",
+    "#FBBF24",
+    "#2DD4BF",
+    "#FB7185"
+  ],
+  "background": "#F0F7F4",
+  "foreground": "#064E3B",
+  "tableAccent": "#0D9488",
+  "good": "#059669",
+  "neutral": "#D97706",
+  "bad": "#E11D48",
+  "textClasses": {
+    "callout": {
+      "fontSize": 28,
+      "fontFace": "Segoe UI Bold",
+      "color": "#064E3B"
+    },
+    "title": {
+      "fontSize": 13,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#064E3B"
+    },
+    "header": {
+      "fontSize": 11,
+      "fontFace": "Segoe UI Semibold",
+      "color": "#064E3B"
+    },
+    "label": {
+      "fontSize": 10,
+      "fontFace": "Segoe UI",
+      "color": "#334155"
+    }
+  }
+}
