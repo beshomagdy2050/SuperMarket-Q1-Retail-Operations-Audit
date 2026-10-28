@@ -13,12 +13,13 @@
 ## 📌 Table of Contents
 1. [Executive Summary & Business Problem](#-executive-summary--business-problem)
 2. [Key Performance Indicators (Q1 2019 Benchmark)](#-key-performance-indicators-q1-2019-benchmark)
-3. [Repository Architecture](#-repository-architecture)
-4. [Data Governance & Feature Engineering Pipeline](#-data-governance--feature-engineering-pipeline)
-5. [SQLite Analytical Warehouse](#-sqlite-analytical-warehouse)
-6. [Key Analytical Insights & Visual Audit](#-key-analytical-insights--visual-audit)
-7. [Strategic Recommendations](#-strategic-recommendations)
-8. [How to Run & Reproduce](#-how-to-run--reproduce)
+3. [Interactive Power BI Dashboard Preview](#-interactive-power-bi-dashboard-preview)
+4. [Repository Architecture](#-repository-architecture)
+5. [Data Governance & Feature Engineering Pipeline](#-data-governance--feature-engineering-pipeline)
+6. [SQLite Analytical Warehouse](#-sqlite-analytical-warehouse)
+7. [Key Analytical Insights & Python Visual Audit](#-key-analytical-insights--python-visual-audit)
+8. [Strategic Recommendations](#-strategic-recommendations)
+9. [How to Run & Reproduce](#-how-to-run--reproduce)
 
 ---
 
@@ -28,7 +29,7 @@ During Q1 2019 (`2019-01-01` to `2019-03-30`), regional supermarket operations a
 
 This project solves four critical operational challenges:
 1. **Data Governance Remediation:** Audited and resolved a 100% systematic schema mismatch where Egyptian branch identifiers (`Alex`, `Cairo`, `Giza`) were paired with legacy Myanmar city strings (`Yangon`, `Mandalay`, `Naypyitaw`), preserving full lineage via `Legacy_City`.
-2. **Basket & Persona Economics:** Quantified revenue concentration across customer segments (`Member` vs. `Normal` x `Gender`) and 6 core product lines to guide targeted cross-selling.
+2. **Basket & Persona Economics:** Quantified revenue concentration across customer segments (`Member` vs. `Normal` × `Gender`) and 6 core product lines to guide targeted cross-selling.
 3. **Shift & Peak-Hour Capacity Planning:** Mapped hourly transaction velocity (`10:00` to `20:00`) and day-of-week demand curves to optimize POS staffing and restocking schedules.
 4. **Customer Experience (NPS) & Payment Friction Audit:** Segmented customer ratings (`4.0` to `10.0`) into actionable NPS-style satisfaction tiers (`Promoter`, `Passive`, `Detractor`) and evaluated checkout payment preferences (`Cash`, `Ewallet`, `Credit card`).
 
@@ -44,6 +45,21 @@ This project solves four critical operational challenges:
 | **Total Volume Sold (`Quantity`)** | **5,510 Units** | Average basket size of **5.51 units / invoice** |
 | **Average Ticket Size** | **$322.97** | Median ticket: **$253.85** (Range: **$10.68 – $1,042.65**) |
 | **Average Customer Rating** | **6.97 / 10.0** | **27.5% Promoters** (≥8.5) · **32.7% Passives** · **39.8% Detractors** (<6.5) |
+
+---
+
+## 🖥️ Interactive Power BI Dashboard Preview
+
+The interactive Power BI report ([`04_PowerBI_Dashboard/SuperMarket_Analysis.pbix`](04_PowerBI_Dashboard/SuperMarket_Analysis.pbix)) is styled with a custom executive JSON theme ([`SuperMarket_Executive_Theme.json`](04_PowerBI_Dashboard/SuperMarket_Executive_Theme.json)) across three analytical views:
+
+### 1. Executive Overview & Branch Performance
+![Power BI Dashboard Preview 1](05_Visuals/dashboard_preview1.png)
+
+### 2. Customer Personas, Basket Economics & Product Mix
+![Power BI Dashboard Preview 2](05_Visuals/dashboard_preview2.png)
+
+### 3. Operational Shifts, Hourly Traffic & Customer Experience (NPS)
+![Power BI Dashboard Preview 3](05_Visuals/dashboard_preview3.png)
 
 ---
 
@@ -68,10 +84,13 @@ SuperMarket-Q1-Retail-Operations-Audit/
 │   └── SuperMarket_Executive_Theme.json    # Custom executive color palette (#1E3A5F Navy, #0D9488 Teal, #D97706 Amber)
 │
 ├── 05_Visuals/
-│   ├── 01_Branch_Product_Performance.png   # Branch KPIs & Branch x Product Line Revenue Heatmap
-│   ├── 02_Customer_Persona_Economics.png   # Customer Persona Leaderboard & Gender Category Split
-│   ├── 03_Hourly_Daily_Traffic_Trends.png  # Hourly Sales/Footfall Curve & Day-of-Week Revenue
-│   └── 04_Payment_Channels_NPS_Tiers.png   # Payment Channel Mix & NPS Customer Satisfaction Tiers
+│   ├── dashboard_preview1.png              # Power BI Dashboard Screenshot - View 1
+│   ├── dashboard_preview2.png              # Power BI Dashboard Screenshot - View 2
+│   ├── dashboard_preview3.png              # Power BI Dashboard Screenshot - View 3
+│   ├── 01_Branch_Product_Performance.png   # Python Visual 1: Branch KPIs & Branch x Product Line Heatmap
+│   ├── 02_Customer_Persona_Economics.png   # Python Visual 2: Customer Persona Leaderboard & Gender Split
+│   ├── 03_Hourly_Daily_Traffic_Trends.png  # Python Visual 3: Hourly Sales/Footfall Curve & Day-of-Week Revenue
+│   └── 04_Payment_Channels_NPS_Tiers.png   # Python Visual 4: Payment Channel Mix & NPS Satisfaction Tiers
 │
 ├── .gitignore
 └── README.md
@@ -83,9 +102,9 @@ SuperMarket-Q1-Retail-Operations-Audit/
 
 ### 1. Schema & Geographic Lineage Fix
 An initial data quality audit revealed zero missing values or duplicate `Invoice ID` keys, alongside **100% mathematical reconciliation** (`COGS = Unit Price × Quantity`, `Tax 5% = 0.05 × COGS`, `Sales = COGS + Tax 5%` with `0.000000` floating-point variance). However, `Branch` and `City` exhibited a systematic geographic mismatch:
-- `Alex` was mapped to `Yangon` (340 rows) $ightarrow$ Remediated to **`Alexandria`**
-- `Cairo` was mapped to `Mandalay` (332 rows) $ightarrow$ Remediated to **`Cairo`**
-- `Giza` was mapped to `Naypyitaw` (328 rows) $ightarrow$ Remediated to **`Giza`**
+- `Alex` was mapped to `Yangon` (340 rows) → Remediated to **`Alexandria`**
+- `Cairo` was mapped to `Mandalay` (332 rows) → Remediated to **`Cairo`**
+- `Giza` was mapped to `Naypyitaw` (328 rows) → Remediated to **`Giza`**
 
 The original city strings were preserved in `Legacy_City` to maintain complete audit lineage.
 
@@ -108,7 +127,7 @@ To power granular slicing in SQLite and Power BI, the Python pipeline engineered
 
 ## 🗄️ SQLite Analytical Warehouse
 
-The processed dataset is persisted into `02_SQL_Warehouse/SuperMarket_Analysis.db` alongside six pre-built analytical views (see [`SuperMarket_Analytical_Views.sql`](02_SQL_Warehouse/SuperMarket_Analytical_Views.sql)):
+The processed dataset is persisted into `02_SQL_Warehouse/SuperMarket_Analysis.db` alongside six pre-built analytical views (see [`02_SQL_Warehouse/SuperMarket_Analytical_Views.sql`](02_SQL_Warehouse/SuperMarket_Analytical_Views.sql)):
 
 | SQL View Name | Analytical Purpose |
 | :--- | :--- |
@@ -121,7 +140,7 @@ The processed dataset is persisted into `02_SQL_Warehouse/SuperMarket_Analysis.d
 
 ---
 
-## 📈 Key Analytical Insights & Visual Audit
+## 📈 Key Analytical Insights & Python Visual Audit
 
 ### 1. Branch Efficiency & Category Specialization
 ![Branch & Product Performance](05_Visuals/01_Branch_Product_Performance.png)
@@ -187,7 +206,7 @@ The processed dataset is persisted into `02_SQL_Warehouse/SuperMarket_Analysis.d
 
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/SuperMarket-Q1-Retail-Operations-Audit.git
+   git clone https://github.com/beshomagdy2050/SuperMarket-Q1-Retail-Operations-Audit.git
    cd SuperMarket-Q1-Retail-Operations-Audit
    ```
 2. **Run the Python Pipeline (`Jupyter Notebook`):**
@@ -199,4 +218,4 @@ The processed dataset is persisted into `02_SQL_Warehouse/SuperMarket_Analysis.d
    - Open `02_SQL_Warehouse/SuperMarket_Analysis.db` in **DB Browser for SQLite**, **DBeaver**, or via Python `sqlite3`, or run the queries in `02_SQL_Warehouse/SuperMarket_Analytical_Views.sql`.
 4. **Explore the Interactive Power BI Dashboard:**
    - Open `04_PowerBI_Dashboard/SuperMarket_Analysis.pbix` in **Microsoft Power BI Desktop**.
-   - To apply or customize the executive visual theme in other reports, import `04_PowerBI_Dashboard/SuperMarket_Executive_Theme.json` via **View $ightarrow$ Themes $ightarrow$ Browse for themes**.
+   - To apply or customize the executive visual theme in other reports, import `04_PowerBI_Dashboard/SuperMarket_Executive_Theme.json` via **View → Themes → Browse for themes**.
